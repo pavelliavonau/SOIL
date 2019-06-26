@@ -1,5 +1,7 @@
 *.a
 *.lib
 *.exe
+*.pdb
 
+.vs/
 build/
