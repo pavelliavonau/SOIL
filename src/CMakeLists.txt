@@ -138,3 +138,17 @@ if(MSVC)
         )
     endif()
 endif()
+
+target_include_directories(${PROJECT_NAME} PUBLIC
+                           "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+                           "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
+)
+set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "SOIL.h")
+
+install(TARGETS SOIL
+    EXPORT soilTargets
+    RUNTIME DESTINATION "bin"
+    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
+)

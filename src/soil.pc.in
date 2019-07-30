@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+
+Name: SOIL
+Description: Simple OpenGL Image Library
+Version: @SOIL_VERSION@
+URL: http://www.lonesock.net/soil.html
+Libs: -L${libdir} -lSOIL
+Cflags: -I${includedir}

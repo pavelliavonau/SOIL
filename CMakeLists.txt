@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13.0 FATAL_ERROR)
 
 set(CMAKE_SYSTEM_VERSION 8.1 CACHE TYPE INTERNAL FORCE)
 
-project(SOIL)
+project(SOIL VERSION 1.16)
 
 ################################################################################
 # Set target arch type if empty. Visual studio solution generator provides it.
@@ -77,7 +77,45 @@ include(CMake/GlobalSettingsInclude.cmake OPTIONAL)
 ################################################################################
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+include(GNUInstallDirs)
+
+#--------------------------------------------------------------------
+# Create generated files
+#--------------------------------------------------------------------
+include(CMakePackageConfigHelpers)
+
+set(SOIL_CONFIG_PATH "${CMAKE_INSTALL_LIBDIR}/cmake/soil")
+
+configure_package_config_file(src/soilConfig.cmake.in
+                              src/soilConfig.cmake
+                              INSTALL_DESTINATION "${SOIL_CONFIG_PATH}"
+                              NO_CHECK_REQUIRED_COMPONENTS_MACRO)
+
+write_basic_package_version_file(src/soilConfigVersion.cmake
+                                 VERSION ${SOIL_VERSION}
+                                 COMPATIBILITY SameMajorVersion)
+
+configure_file(src/soil.pc.in src/soil.pc @ONLY)
+
 ################################################################################
 # Sub-projects
 ################################################################################
 add_subdirectory(src)
+
+
+#--------------------------------------------------------------------
+# Install files other than the library
+# The library is installed by src/CMakeLists.txt
+#--------------------------------------------------------------------
+install(DIRECTORY include/SOIL DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        FILES_MATCHING PATTERN SOIL.h PATTERN soilnative.h)
+
+install(FILES "${SOIL_BINARY_DIR}/soilConfig.cmake"
+              "${SOIL_BINARY_DIR}/soilConfigVersion.cmake"
+        DESTINATION "${SOIL_CONFIG_PATH}")
+
+install(EXPORT soilTargets FILE soilTargets.cmake
+        EXPORT_LINK_INTERFACE_LIBRARIES
+        DESTINATION "${SOIL_CONFIG_PATH}")
+install(FILES "${SOIL_BINARY_DIR}/soil.pc"
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
